@@ -22,7 +22,7 @@ func main() {
 	result, err := sandbox.Run(context.Background(), sandbox.Config{
 		Path: "go",
 		Args: []string{"env", "GOMOD"},
-		Dir:  "C:/Users/Usuario/Desktop/Workspace",
+		Dir:  "C:/Users/ExampleUser/Workspace",
 		Env: []string{
 			"GO111MODULE=on",
 		},
