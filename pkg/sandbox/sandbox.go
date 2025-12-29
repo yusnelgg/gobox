@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"os"
 	"os/exec"
 	"time"
 )
@@ -13,6 +14,10 @@ func Run(ctx context.Context, cfg Config) (*Result, error) {
 
 	if cfg.Path == "" {
 		return nil, errors.New("sandbox: empty path")
+	}
+
+	if _, err := exec.LookPath(cfg.Path); err != nil {
+		return nil, errors.New("sandbox: executable not found in PATH")
 	}
 
 	if cfg.Timeout > 0 {
@@ -28,6 +33,16 @@ func Run(ctx context.Context, cfg Config) (*Result, error) {
 	cmd.Stderr = &stderr
 
 	if cfg.Dir != "" {
+		cmd.Dir = cfg.Dir
+	}
+
+	if cfg.Dir != "" {
+		if _, err := os.Stat(cfg.Dir); err != nil {
+			if os.IsNotExist(err) {
+				return nil, errors.New("sandbox: working directory does not exist")
+			}
+			return nil, err
+		}
 		cmd.Dir = cfg.Dir
 	}
 

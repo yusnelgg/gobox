@@ -29,7 +29,8 @@ func main() {
 		Timeout: 2 * time.Second,
 	})
 	if err != nil {
-		panic(err)
+		println("Error executing command:", err.Error())
+		return
 	}
 	println("Stdout:", result.Stdout)
 	println("Stderr:", result.Stderr)
